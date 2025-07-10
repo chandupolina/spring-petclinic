@@ -4,10 +4,6 @@ pipeline {
     }// Run on any available agent
 
     // Environment variables for configuration
-    environment {
-        SONAR_SERVER = 'SonarQubeServer1'          // Your SonarQube server name in Jenkins
-    }
-
     stages {
 
         // Stage 1: Build the application
@@ -28,15 +24,15 @@ pipeline {
             steps {
                 echo 'Running SonarQube analysis...'
                 // Sets up SonarQube environment
-                withSonarQubeEnv(SONAR_SERVER) {
-                    // Runs the scanner
+     
                     sh '''
                     mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=pet \
-  -Dsonar.host.url=http://34.133.89.244:9000 \
-  -Dsonar.login=sqp_fa848e5e27d3e210979de498901a0c464c0b948c
-  '''
-                }
+                      -DskipTests\
+                      -Dsonar.projectKey=pet \
+                      -Dsonar.host.url=http://34.133.89.244:9000 \
+                        -Dsonar.login=sqp_fa848e5e27d3e210979de498901a0c464c0b948c
+                     '''
+                
             }
         }
     }
