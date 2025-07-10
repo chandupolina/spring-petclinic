@@ -13,9 +13,7 @@ pipeline {
             }
             steps {
                 echo 'Building the application...'
-                sh ' rm -rf spring-petclinic'
-                git clone https://github.com/chandupolina/spring-petclinic.git
-                // Replace with your build command (e.g., 'npm install')
+              
                 dir('spring-petclinic'){
                     sh '''
                     mvn clean verify sonar:sonar \
