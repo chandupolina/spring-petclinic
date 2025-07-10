@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        SONAR-SERVER ='SonarQubeServer1'
+        SONARQUBE_SERVER ='SonarQubeServer1'
     }
     stages {
         stage ('Build') {
@@ -13,7 +13,7 @@ pipeline {
         stage ('sonarqube analysis') {
             steps {
                 echo "project analysis report"
-                withSonarQubeEnv("${SONARQUBE-SERVER}") {
+                withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     sh 'mvn sonar:sonar'
                 } 
             }
