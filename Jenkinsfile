@@ -13,7 +13,7 @@ pipeline {
         stage ('sonarqube analysis') {
             steps {
                 echo "project analysis report"
-                withSonarQubeEnv("${SONARQUBE_SERVER}") {
+                withSonarQubeEnv("${SONARQUBE-SERVER}") {
                     sh 'mvn sonar:sonar'
                 } 
             }
