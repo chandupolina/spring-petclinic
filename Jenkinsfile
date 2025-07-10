@@ -30,7 +30,12 @@ pipeline {
                 // Sets up SonarQube environment
                 withSonarQubeEnv(SONAR_SERVER) {
                     // Runs the scanner
-                    sh 'mvn sonar:sonar'
+                    sh '''
+                    mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=pet \
+  -Dsonar.host.url=http://34.133.89.244:9000 \
+  -Dsonar.login=sqp_fa848e5e27d3e210979de498901a0c464c0b948c
+  '''
                 }
             }
         }
