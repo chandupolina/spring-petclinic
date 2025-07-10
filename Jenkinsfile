@@ -13,28 +13,22 @@ pipeline {
             }
             steps {
                 echo 'Building the application...'
+                git clone https://github.com/chandupolina/spring-petclinic.git
                 // Replace with your build command (e.g., 'npm install')
-                sh 'mvn clean package -Dmaven.test.skip=true'
-            }
-        }
-
-
-        // Stage 2: Scan with SonarQube
-        stage('SonarQube Scan') {
-            steps {
-                echo 'Running SonarQube analysis...'
-                // Sets up SonarQube environment
-     
+                dir('spring-petclinic.git'){
                     sh '''
                     mvn clean verify sonar:sonar \
                       -DskipTests\
                       -Dsonar.projectKey=pet \
                       -Dsonar.host.url=http://34.133.89.244:9000 \
-                        -Dsonar.login=sqp_fa848e5e27d3e210979de498901a0c464c0b948c
-                     '''
-                
+                       -Dsonar.login=sqp_fa848e5e27d3e210979de498901a0c464c0b948c
+                       ''' 
+                }
             }
         }
+
+
+        // Stage 2: Scan with SonarQube
     }
 
     // Runs after the pipeline finishes
