@@ -15,8 +15,6 @@ pipeline {
                 echo "project analysis report"
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     sh "mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=petclinic \
-                        -Dsonar.host.url=https://34.133.89.244:9000 \
                         -Dsonar.login=sqp_102653f8646b59eedf7f0b7c0cd5185ebab12ee8"
                 } 
             }
