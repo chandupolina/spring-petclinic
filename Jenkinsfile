@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        SONAR-SERVER='SonarQubeServer1'
+        SONAR-SERVER ='SonarQubeServer1'
     }
     stages {
         stage ('Build') {
@@ -20,3 +20,4 @@ pipeline {
         }
     }
 }
+
