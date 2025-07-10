@@ -1,5 +1,7 @@
 pipeline {
-    agent any // Run on any available agent
+    agent {
+        label 'java-slave'
+    }// Run on any available agent
 
     // Environment variables for configuration
     environment {
@@ -10,6 +12,9 @@ pipeline {
 
         // Stage 1: Build the application
         stage('Build') {
+            tools {
+                jdk 'jdk-17'
+            }
             steps {
                 echo 'Building the application...'
                 // Replace with your build command (e.g., 'npm install')
