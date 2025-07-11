@@ -1,23 +1,59 @@
 pipeline {
     agent any
     environment {
-        SONARQUBE_SERVER ='SonarQubeServer1'
+        SONARQUBE_SERVER = 'SonarQubeServer1'
         DOCKER_REPO = 'cpolina/java_repo'
         DOCKER_IMAGE = 'first_image'
         DOCKER_CREDS = credentials('docker_creds')
     } 
     stages {
-        stage ('Docker build and push') {
+        stage('Build') {
             steps {
-                echo " building an image "
-                sh "docker build -t  ${DOCKER_IMAGE} -f .devcontainer/Dockerfile . "
-                echo  " tags an image means renaming the image "
-                sh "docker tag ${DOCKER_IMAGE}:latest  ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_NUMBER}"
-                echo "*******************************docker login *************************"
-                sh "docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}"
-                echo "*************************pushing image to registry******************************"
-                sh "docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                echo "Building application"
+                sh 'mvn clean install'
             }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                echo "Project analysis report"
+                withSonarQubeEnv("${SONARQUBE_SERVER}") {
+                    sh "mvn sonar:sonar -Dsonar.projectKey=fresh"
+                } 
+            }
+        }
+        stage('Docker Build and Push') {
+            steps {
+                script {
+                    echo "Cleaning up Docker environment"
+                    sh "docker system prune -a -f --volumes || true"
+                    sh "docker builder prune -f || true"
+                    
+                    echo "Checking disk space"
+                    sh "df -h"
+                    
+                    echo "Building Docker image without tag"
+                    sh "docker build -t ${DOCKER_IMAGE} -f .devcontainer/Dockerfile ."
+                    
+                    echo "Tagging Docker image for Docker Hub"
+                    sh "docker tag ${DOCKER_IMAGE}:latest ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                    
+                    echo "Logging into Docker Hub"
+                    sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
+                    
+                    echo "Pushing image to Docker Hub"
+                    sh "docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                    
+                    echo "Cleaning up local images"
+                    sh "docker rmi ${DOCKER_IMAGE}:latest || true"
+                    sh "docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_NUMBER} || true"
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo "Logging out of Docker Hub"
+            sh 'docker logout'
         }
     }
 }
