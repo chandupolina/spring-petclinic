@@ -7,20 +7,6 @@ pipeline {
         DOCKER_CREDS = credentials('docker_creds')
     } 
     stages {
-        stage('Build') {
-            steps {
-                echo "Building application"
-                sh 'mvn clean install'
-            }
-        }
-        stage('SonarQube Analysis') {
-            steps {
-                echo "Project analysis report"
-                withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    sh "mvn sonar:sonar -Dsonar.projectKey=fresh"
-                } 
-            }
-        }
         stage('Docker Build and Push') {
             steps {
                 script {
