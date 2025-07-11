@@ -24,7 +24,7 @@ pipeline {
         stage ('Docker build and push') {
             steps {
                 echo " building an image "
-                sh "docker build -t  ${DOCKER_IMAGE} . "
+                sh "docker build -t  ${DOCKER_IMAGE} -f .Devcontainer/Dockerfile "
                 echo  " tags an image means renaming the image "
                 sh "docker tag ${DOCKER_IMAGE}:latest  ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_NUMBER}"
                 echo "*******************************docker login *************************"
