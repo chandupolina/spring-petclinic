@@ -21,17 +21,14 @@ pipeline {
                     sh "docker build -t ${DOCKER_IMAGE} -f .devcontainer/Dockerfile ."
                     
                     echo "Tagging Docker image for Docker Hub"
-                    sh "docker tag ${DOCKER_IMAGE}:latest ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                    sh "docker tag ${DOCKER_IMAGE}:latest ${DOCKER_REPO}:${BUILD_NUMBER}"
                     
                     echo "Logging into Docker Hub"
                     sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
                     
                     echo "Pushing image to Docker Hub"
-                    sh "docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                    sh "docker push ${DOCKER_REPO}:${BUILD_NUMBER}"
                     
-                    echo "Cleaning up local images"
-                    sh "docker rmi ${DOCKER_IMAGE}:latest || true"
-                    sh "docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${BUILD_NUMBER} || true"
                 }
             }
         }
