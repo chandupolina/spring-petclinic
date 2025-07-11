@@ -18,8 +18,7 @@ pipeline {
                 echo "project analysis report"
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     sh "mvn clean verify sonar:sonar \
-                          -Dsonar.projectKey=spring-petclinic \
-                         -Dsonar.login=sqp_ca0a1e58aea60b32d6748b0d3ee3d415e652d5af"
+                         -Dsonar.login=sqp_469df989de78bf4cbc7a028a61cacdb041b1dec0"
                 } 
             }
         }
