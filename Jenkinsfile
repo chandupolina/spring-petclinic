@@ -16,9 +16,13 @@ pipeline {
         stage ('sonarqube analysis') {
             steps {
                 echo "project analysis report"
-                withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    sh "mvn clean verify sonar:sonar \
-                        -Dsonar.login=sqp_4d839c69c0ae3b38862596c85ec0eef2187e7105"
+                sh '''
+                mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=scanpro \
+  -Dsonar.host.url=http://34.133.89.244:9000 \
+  -Dsonar.login=sqp_4d839c69c0ae3b38862596c85ec0eef2187e7105 
+  '''
+                    
                 } 
             }
         }
