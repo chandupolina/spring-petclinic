@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'java-slave'
+    }
     environment {
         SONARQUBE_SERVER = 'SonarQubeServer1'
         DOCKER_REPO = 'cpolna/java-repo2'
