@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo "Analysis of Project and building a report"
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=test1"
+                    sh "mvn clean verify sonar:sonar  -Dsonar.projectKey=sample"
                 } 
             }   
         }
