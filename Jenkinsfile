@@ -4,7 +4,7 @@ pipeline {
         SONARQUBE_SERVER = 'SonarQubeServer1'
         DOCKER_REPO = 'cpolna/java-repo1'
         DOCKER_IMAGE = 'second_image'
-    }
+    } 
     stages {
         stage ('Sonar Analysis') {
             steps {
