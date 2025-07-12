@@ -10,7 +10,7 @@ pipeline {
             steps {
                 echo "Analysis of Project and building a report"
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    sh "mvn clean verify sonar:sonar"
+                    sh "mvn clean verify sonar:sonar" 
                 } 
             }   
         }
