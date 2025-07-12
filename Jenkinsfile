@@ -12,7 +12,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     sh "mvn clean verify sonar:sonar"
                 }
-            }
+            }   
         }
     }
 }
