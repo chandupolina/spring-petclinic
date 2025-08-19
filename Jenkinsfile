@@ -23,6 +23,9 @@ pipeline {
             }
         }
         stage ('Docker build and push') {
+            agent {
+                label 'docker-slave'
+            }
             steps {
                 echo "Building an application and pushing an image into Docker hub"
                 echo " **************************building an image**********************************"
