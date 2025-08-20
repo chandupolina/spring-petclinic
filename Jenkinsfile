@@ -5,7 +5,6 @@ pipeline {
     environment {
         SONARQUBE_SERVER = 'SonarQubeServer1'
         DOCKER_REPO = 'cpolina/java-repo2'
-        DOCKER_IMAGE = 'second_image'
     }
     stages {
         stage ('build') {
@@ -31,11 +30,12 @@ pipeline {
                 echo " **************************building an image**********************************"
                 sh "docker build -t ${DOCKER_REPO}:${BUILD_NUMBER} -f .devcontainer/Dockerfile . "
                 echo " *********************logging into Docker hub****************"
-                withCredentials([usernamePassword(credentialsId: 'docker_creds', usernameVariable: 'DOCKER_CREDS_USR', passwordVariable: 'DOCKER_CREDS_PSW')]) {
-                    sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin"
+                withCredentials([usernamePassword(credentialsId: 'docker_creds' ,usernameVariable: 'DOCKER_CREDS_USR', passwordVariable: 'DOCKER_CREDS_PSW')]) {
+                    sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --passwd-stdin "
                     echo " pushing an image to docker_hub"
                     sh "docker push ${DOCKER_REPO}:${BUILD_NUMBER}"
                }
+               sh "docker run -d --name container1  -p 8908:8080  ${DOCKER_REPO}:${BUILD_NUMBER}"
             }
         }
     }
