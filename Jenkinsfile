@@ -31,7 +31,7 @@ pipeline {
                 sh "docker build -t ${DOCKER_REPO}:${BUILD_NUMBER} -f .devcontainer/Dockerfile . "
                 echo " *********************logging into Docker hub****************"
                 withCredentials([usernamePassword(credentialsId: 'docker_creds' ,usernameVariable: 'DOCKER_CREDS_USR', passwordVariable: 'DOCKER_CREDS_PSW')]) {
-                    sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --passwd-stdin "
+                    sh "echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --passwd-stdin"
                     echo " pushing an image to docker_hub"
                     sh "docker push ${DOCKER_REPO}:${BUILD_NUMBER}"
                }
