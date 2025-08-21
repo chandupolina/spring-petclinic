@@ -1,37 +1,36 @@
-# Not actually used by the devcontainer, but it is used by gitpod
-# Step 1: Take the base image as ubuntu:18.04
-FROM ubuntu:22.04
+# Stage 1: Build the application
+FROM maven:3.8.5-openjdk-21 AS build
 
-# Step 2 : Add the metadata to the image
-LABEL maintainer="chandu@example.com"
-LABEL version="1.0"
-LABEL description="A simple Java application using OpenJDK 17"
+# Set the working directory
+WORKDIR /app
 
-# Step 3: Build time variable
-ARG version=1.0
+# Copy the pom.xml and download dependencies
+COPY pom.xml .
+COPY src ./src
 
-# Step 4: Set environment variables
-ENV APP_HOME=/app
-ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-
-# Step 5: Set the working directory
-WORKDIR $APP_HOME
-
-# Step 6: Update package lists
-RUN apt update && apt install openjdk-21-jdk wget -y
-
-#Step 7: Download the application JAR file
-RUN wget "https://storage.googleapis.com/newbucketforspring/spring-petclinic-3.5.0-SNAPSHOT.jar"
+# Build the application
+RUN mvn clean package -DskipTests
 
 
-# Step 8: Add the user to run the application
+
+
+# Stage 2: Create the runtime image
+FROM openjdk:21-jdk-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the JAR file from the build stage
+COPY --from=build /app/target/spring-petclinic-3.5.0-SNAPSHOT.jar   .
+
+# Add the user to run the application
 RUN useradd -ms /bin/bash chandu
 
-# Step 9: Switch to the non-root user
+# Switch to the non-root user
 USER chandu
 
-# Step 10: Expose the Application
+# Expose the Application
 EXPOSE 8080
 
-# Step 11: Command to run the application
+# Command to run the application
 CMD ["java", "-jar", "spring-petclinic-3.5.0-SNAPSHOT.jar"]
