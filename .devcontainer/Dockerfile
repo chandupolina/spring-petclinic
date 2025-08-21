@@ -1,5 +1,10 @@
 # Stage 1: Build the application
-FROM maven:3.6.3-openjdk-21 AS build
+FROM ubuntu:22.04 AS build
+
+# Install Maven
+RUN apt-get update && apt-get install -y maven
+# Install OpenJDK
+RUN apt-get install -y openjdk-21-jdk
 
 # Set the working directory
 WORKDIR /app
