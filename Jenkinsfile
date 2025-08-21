@@ -35,7 +35,7 @@ pipeline {
                     echo " pushing an image to docker_hub"
                     sh "docker push ${DOCKER_REPO}:${BUILD_NUMBER}"
                }
-               sh "docker run -d --name container1  -p 8908:8080  ${DOCKER_REPO}:${BUILD_NUMBER}"
+               sh "docker run -d --name container2  -p 8910:8080  ${DOCKER_REPO}:${BUILD_NUMBER}"
             }
         }
     }
