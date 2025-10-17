@@ -10,7 +10,7 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        stage ('sonarqube analysis') {
+        stage ('sonarqube analysis') { 
             steps {
                 echo "project analysis report"
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
