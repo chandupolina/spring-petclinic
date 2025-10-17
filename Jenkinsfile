@@ -19,7 +19,7 @@ pipeline {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     sh "mvn sonar:sonar -Dsonar.projectKey=spring"
                 }
-            }
+            } 
         }
         stage ('Docker build and push') {
             agent {
