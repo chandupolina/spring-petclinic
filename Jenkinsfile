@@ -13,7 +13,14 @@ pipeline {
         }
         stage('Push Artifact to Bucket') {
             steps {
-                sh "gsutil cp target/${ARTIFACT_NAME} gs://${BUCKET_NAME}/"
+                withCredentials([file(credentialsId: 'gcp-sa-key', variable: 'GCP_KEY')]) {
+                    sh '''
+                      set -e
+                      gcloud auth activate-service-account --key-file=$GCP_KEY
+                      gcloud config set project 'gowtham-project-476511'
+                      gsutil cp target/${ARTIFACT_NAME} gs://${BUCKET_NAME}/
+                    
+                    '''
             }
         }
         stage('Build Docker Image') {
@@ -23,4 +30,5 @@ pipeline {
             }
         }
     }
+}
 }
