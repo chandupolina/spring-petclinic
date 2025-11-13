@@ -21,7 +21,8 @@ pipeline {
                       gsutil cp target/${ARTIFACT_NAME} gs://${BUCKET_NAME}/
                     
                     '''
-            }
+                } // <-- close withCredentials block (this was missing)
+            } // <-- close steps block for Push stage
         }
         stage('Build Docker Image') {
             steps {
@@ -30,5 +31,4 @@ pipeline {
             }
         }
     }
-}
 }
