@@ -1,22 +1,25 @@
 pipeline {
     agent any
     environment {
-        SONARQUBE_SERVER ='SonarQubeServer1'
-    }
+        BUCKET_NAME = 'my-java-artifact-bucket'
+        ARTIFACT_NAME = 'spring-petclinic-3.5.0-SNAPSHOT.jar'
+        DOCKER_IMAGE_NAME = 'my-java-app-image'
+    } 
     stages {
-        stage ('Build') {
+        stage('Build Artifact') {
             steps {
-                echo " Building application "
-                sh 'mvn clean install'
+                sh 'mvn clean package -DskipTests'
             }
         }
-        stage ('sonarqube analysis') { 
+        stage('Push Artifact to Bucket') {
             steps {
-                echo "project analysis report"
-                withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                   sh "mvn sonar:sonar -Dsonar.projectKey= spring1"
-                } 
+                sh "gsutil cp target/${ARTIFACT_NAME} gs://${BUCKET_NAME}/"
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh "gsutil cp gs://${BUCKET_NAME}/${ARTIFACT_NAME} ."
+                sh "docker build -t ${DOCKER_IMAGE_NAME} ."
             }
         }
     }
-}
