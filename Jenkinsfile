@@ -25,6 +25,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
+                sh "gsutil cp gs://${BUCKET_NAME}/${ARTIFACT_NAME} ."
                 sh "docker build -t ${DOCKER_IMAGE_NAME} ."
             }
         }
