@@ -21,7 +21,7 @@ WORKDIR $APP_HOME
 RUN apt update && apt install openjdk-21-jdk wget -y
 
 #Step 7: Download the application JAR file
-RUN wget "https://storage.googleapis.com/my-java-artifact-bucket/spring-petclinic-3.5.0-SNAPSHOT.jar"
+RUN wget "https://storage.googleapis.com/my-java-artifact-bucket/spring-petclinic-3.5.0-SNAPSHOT.jar" 
 
 
 # Step 8: Add the user to run the application
