@@ -8,27 +8,36 @@ pipeline {
     stages {
         stage('Build Artifact') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                script {
+                    // Build the Java artifact using Maven
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
         stage('Push Artifact to Bucket') {
             steps {
+                // Using withCredentials to handle the GCP service account key
                 withCredentials([file(credentialsId: 'gcp-sa-key', variable: 'GCP_KEY')]) {
-                    sh '''
-                      set -e
-                      gcloud auth activate-service-account --key-file=$GCP_KEY
-                      gcloud config set project 'gowtham-project-476511'
-                      gsutil cp target/${ARTIFACT_NAME} gs://${BUCKET_NAME}/
-                    
-                    '''
+                    script {
+                        // Authenticate and push the artifact to GCS
+                        sh '''
+                            set -e
+                            gcloud auth activate-service-account --key-file=$GCP_KEY
+                            gcloud config set project 'gowtham-project-476511'
+                            gsutil cp target/${ARTIFACT_NAME} gs://${BUCKET_NAME}/
+                        '''
+                    }
+                }
             }
         }
         stage('Build Docker Image') {
             steps {
-                sh "gsutil cp gs://${BUCKET_NAME}/${ARTIFACT_NAME} ."
-                sh "docker build -t ${DOCKER_IMAGE_NAME} ."
+                script {
+                    // Download the artifact from GCS and build the Docker image
+                    sh "gsutil cp gs://${BUCKET_NAME}/${ARTIFACT_NAME} ."
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} ."
+                }
             }
         }
     }
-} 
 }
